@@ -37,7 +37,7 @@ class Init {
 
   // DBログイン情報
   var $db_id = "postgres";
-  var $db_pass = "";
+  var $db_pass = "hoge";
   
   // データディレクトリの名前
   var $dirName		= "data";
@@ -352,7 +352,7 @@ class Init {
   var $ax = array(0, 1, 1, 1, 0,-1, 0, 1, 2, 2, 2, 1, 0,-1,-1,-2,-1,-1, 0);
   var $ay = array(0,-1, 0, 1, 1, 0,-1,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2);
 
-  // コメントなどに、予¥定のように¥が勝手に追加される
+  // コメントなどに、予\定のように\が勝手に追加される
   var $stripslashes;
 
   function setVariable() {
@@ -454,7 +454,7 @@ class Init {
     // 海外のサーバに設置する場合は次の行にある//をはずす。
     // putenv("TZ=JST-9");
 
-    // 予¥定のように¥が勝手に追加される
+    // 予\定のように\が勝手に追加される
     $this->stripslashes	= get_magic_quotes_gpc();
   }
 }

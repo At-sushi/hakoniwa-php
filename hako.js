@@ -30,9 +30,9 @@ function Navi(position, img, title, pos, text, exp) {
   } else {
     StyElm.style.marginLeft = 240;
   }
-  StyElm.innerHTML = "<div class='NaviTitle'>" + title + " " + pos + "<¥/div><img class='NaviImg' src=" + img + "><div class='NaviText'>" + text.replace("¥n", "<br>") + "<¥/div>";
+  StyElm.innerHTML = "<div class='NaviTitle'>" + title + " " + pos + "<\/div><img class='NaviImg' src=" + img + "><div class='NaviText'>" + text.replace("\n", "<br>") + "<\/div>";
   if(exp) {
-    StyElm.innerHTML += "<div class='NaviText'>" + eval(exp) + "<¥/div>";
+    StyElm.innerHTML += "<div class='NaviText'>" + eval(exp) + "<\/div>";
   }
 }
 function NaviClose() {

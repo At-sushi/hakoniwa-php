@@ -33,7 +33,7 @@ END;
   }
   function main($data) {
     global $init;
-    print "<h1>箱島２ メンテナンスツール</h1>¥n";
+    print "<h1>箱島２ メンテナンスツール</h1>\n";
 
 	// データ保存用ディレクトリの存在チェック
 	if(!is_dir("{$init->dirName}")) {
@@ -52,18 +52,18 @@ END;
     if(is_file("{$init->dirName}/hakojima.dat")) {
       $this->dataPrint($data);
     } else {
-      print "<hr>¥n";
-      print "<form action=¥"{$GLOBALS['THIS_FILE']}¥" method=¥"post¥">¥n";
-      print "<input type=¥"hidden¥" name=¥"PASSWORD¥" value=¥"{$data['PASSWORD']}¥">¥n";
-      print "<input type=¥"hidden¥" name=¥"mode¥" value=¥"NEW¥">¥n";
-      print "<input type=¥"submit¥" value=¥"新しいデータを作る¥">¥n";
-      print "</form>¥n";
+      print "<hr>\n";
+      print "<form action=\"{$GLOBALS['THIS_FILE']}\" method=\"post\">\n";
+      print "<input type=\"hidden\" name=\"PASSWORD\" value=\"{$data['PASSWORD']}\">\n";
+      print "<input type=\"hidden\" name=\"mode\" value=\"NEW\">\n";
+      print "<input type=\"submit\" value=\"新しいデータを作る\">\n";
+      print "</form>\n";
     }
 
     // バックアップデータ
     $dir = opendir("./");
     while($dn = readdir($dir)) {
-      if(preg_match("/{$init->dirName}¥.bak/", $dn)) {
+      if(preg_match("/{$init->dirName}\.bak/", $dn)) {
         $this->dataPrint($data, 1);
         break;
       }
@@ -79,10 +79,10 @@ END;
     print "<HR>";
     if(strcmp($suf, "") == 0) {
       $fp = fopen("{$init->dirName}/hakojima.dat", "r");
-      print "<h1>現役データ</h1>¥n";
+      print "<h1>現役データ</h1>\n";
     } else {
       $fp = fopen("{$init->dirName}.bak/hakojima.dat", "r");
-      print "<h1>バックアップ</h1>¥n";
+      print "<h1>バックアップ</h1>\n";
     }
 
     $lastTurn = chop(fgets($fp, READ_LINE));
@@ -93,7 +93,7 @@ END;
     print <<<END
 <strong>ターン$lastTurn</strong><br>
 <strong>最終更新時間</strong>:$timeString<br>
-<strong>最終更新時間(秒数表¥示)</strong>:1970年1月1日から$lastTime 秒<br>
+<strong>最終更新時間(秒数表\示)</strong>:1970年1月1日から$lastTime 秒<br>
 
 END;
 
@@ -227,10 +227,10 @@ class Main {
     $fileName = "{$init->dirName}/hakojima.dat";
     touch($fileName);
     $fp = fopen($fileName, "w");
-    fputs($fp, "1¥n");
-    fputs($fp, "{$now}¥n");
-    fputs($fp, "0¥n");
-    fputs($fp, "1¥n");
+    fputs($fp, "1\n");
+    fputs($fp, "{$now}\n");
+    fputs($fp, "0\n");
+    fputs($fp, "1\n");
     fclose($fp);
   }
   function delMode() {
@@ -261,7 +261,7 @@ class Main {
     while($line = fgets($fp, READ_LINE)) {
       array_push($buffer, $line);
     }
-    $buffer[1] = "{$sec}¥n";
+    $buffer[1] = "{$sec}\n";
     fseek($fp, 0);
     while($line = array_shift($buffer)) {
       fputs($fp, $line);
@@ -298,7 +298,7 @@ class Main {
     if(strcmp($this->dataSet['PASSWORD'], $init->masterPassword) == 0) {
       return 1;
     } else {
-      print "<h2>パスワードが違います。</h2>¥n";
+      print "<h2>パスワードが違います。</h2>\n";
       return 0;
     }
   }

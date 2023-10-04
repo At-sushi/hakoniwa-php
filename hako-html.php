@@ -114,7 +114,7 @@ class HtmlTop extends HTML {
       $radio = ""; $radio2 = "checked";
     }
 
-    print "<h1>{$init->title}</h1>¥n";
+    print "<h1>{$init->title}</h1>\n";
     if(DEBUG == true) {
       print <<<END
 <form action="{$GLOBALS['THIS_FILE']}" method="post">
@@ -179,7 +179,7 @@ END;
       $comment_turn = $island['comment_turn'];
       $monster = '';
       if($island['monster'] > 0) {
-        $monster = "<strong class=¥"monster¥">[怪獣{$island['monster']}体]</strong>";
+        $monster = "<strong class=\"monster\">[怪獣{$island['monster']}体]</strong>";
       }
       
       $name = "";
@@ -198,27 +198,27 @@ END;
       $prize = $hako->getPrizeList($prize);
 
       if($init->commentNew > 0 && ($comment_turn + $init->commentNew) > $hako->islandTurn) {
-        $comment .= " <span class=¥"new¥">New</span>";
+        $comment .= " <span class=\"new\">New</span>";
       }
       
-      print "<tr>¥n";
-      print "<th {$init->bgNumberCell} rowspan=¥"2¥">{$init->tagNumber_}$j{$init->_tagNumber}</th>¥n";
-      print "<td {$init->bgNameCell} rowspan=¥"2¥"><a href=¥"{$GLOBALS['THIS_FILE']}?Sight={$id}¥">{$name}</a> {$monster}<br>¥n{$prize}</td>¥n";
+      print "<tr>\n";
+      print "<th {$init->bgNumberCell} rowspan=\"2\">{$init->tagNumber_}$j{$init->_tagNumber}</th>\n";
+      print "<td {$init->bgNameCell} rowspan=\"2\"><a href=\"{$GLOBALS['THIS_FILE']}?Sight={$id}\">{$name}</a> {$monster}<br>\n{$prize}</td>\n";
 
-      print "<td {$init->bgInfoCell}>$pop</td>¥n";
-      print "<td {$init->bgInfoCell}>$area</td>¥n";
-      print "<td {$init->bgInfoCell}>$money</td>¥n";
-      print "<td {$init->bgInfoCell}>$food</td>¥n";
-      print "<td {$init->bgInfoCell}>$farm</td>¥n";
-      print "<td {$init->bgInfoCell}>$factory</td>¥n";
-      print "<td {$init->bgInfoCell}>$mountain</td>¥n";
-      print "</tr>¥n";
-      print "<tr>¥n";
-      print "<td {$init->bgCommentCell} colspan=¥"7¥">{$init->tagTH_}{$owner}：{$init->_tagTH}$comment</td>¥n";
-      print "</tr>¥n";
+      print "<td {$init->bgInfoCell}>$pop</td>\n";
+      print "<td {$init->bgInfoCell}>$area</td>\n";
+      print "<td {$init->bgInfoCell}>$money</td>\n";
+      print "<td {$init->bgInfoCell}>$food</td>\n";
+      print "<td {$init->bgInfoCell}>$farm</td>\n";
+      print "<td {$init->bgInfoCell}>$factory</td>\n";
+      print "<td {$init->bgInfoCell}>$mountain</td>\n";
+      print "</tr>\n";
+      print "<tr>\n";
+      print "<td {$init->bgCommentCell} colspan=\"7\">{$init->tagTH_}{$owner}：{$init->_tagTH}$comment</td>\n";
+      print "</tr>\n";
     }
-    print "</table>¥n</div>¥n";
-    print "<hr>¥n";
+    print "</table>\n</div>\n";
+    print "<hr>\n";
     $this->logPrintTop();
     $this->historyPrint();
   }
@@ -238,8 +238,8 @@ END;
   function newDiscovery($number) {
     global $init;
 
-    print "<div id=¥"NewIsland¥">¥n";
-    print "<h2>新しい島を探す</h2>¥n";
+    print "<div id=\"NewIsland\">\n";
+    print "<h2>新しい島を探す</h2>\n";
     if($number < $init->maxIsland) {
       print <<<END
 <form action="{$GLOBALS['THIS_FILE']}" method="post">
@@ -256,10 +256,10 @@ END;
 </form>
 END;
     } else {
-      print "島の数が最大数です・・・現在登録できません。¥n";
+      print "島の数が最大数です・・・現在登録できません。\n";
     }
-    print "</div>¥n";
-    print "<hr>¥n";
+    print "</div>\n";
+    print "<hr>\n";
   }
   //---------------------------------------------------
   // 島の名前とパスワードの変更
@@ -325,7 +325,7 @@ END;
     global $init;
     $styleSheet;
     for($i = 0; $i < count($init->cssList); $i++) {
-      $styleSheet .= "<option value=¥"{$init->cssList[$i]}¥">{$init->cssList[$i]}</option>¥n";
+      $styleSheet .= "<option value=\"{$init->cssList[$i]}\">{$init->cssList[$i]}</option>\n";
     }
     print <<<END
 <div id="HakoSkin">
@@ -347,21 +347,21 @@ END;
   //---------------------------------------------------
   function logPrintTop() {
     global $init;
-    print "<div id=¥"RecentlyLog¥">¥n";
-    print "<h2>最近の出来事</h2>¥n";
+    print "<div id=\"RecentlyLog\">\n";
+    print "<h2>最近の出来事</h2>\n";
     for($i = 0; $i < $init->logTopTurn; $i++) {
       LogIO::logFilePrint($i, 0, 0);
     }
-    print "</div>¥n";
+    print "</div>\n";
   }
   //---------------------------------------------------
   // 発見の記録
   //---------------------------------------------------
   function historyPrint() {
-    print "<div id=¥"HistoryLog¥">¥n";
+    print "<div id=\"HistoryLog\">\n";
     print "<h2>発見の記録</h2>";
     LogIO::historyPrint();
-    print "</div>¥n";
+    print "</div>\n";
   }
 }
 //------------------------------------------------------------------
@@ -383,11 +383,11 @@ class HtmlMap extends HTML {
     $this->tempOwer($hako, $data, $number);
     
     if($init->useBbs) {
-      print "<div id=¥"localBBS¥">¥n";
+      print "<div id=\"localBBS\">\n";
       $this->lbbsHead($island);
       $this->lbbsInputOW($island, $data);
       $this->lbbsContents($island);
-      print "</div>¥n";
+      print "</div>\n";
     }
     $this->islandRecent($island, 1);
   }
@@ -412,11 +412,11 @@ END;
     $this->islandMap($hako, $island, 0);
 
     if($init->useBbs) {
-      print "<div id=¥"localBBS¥">¥n";
+      print "<div id=\"localBBS\">\n";
       $this->lbbsHead($island);
       $this->lbbsInput($island, $data);
       $this->lbbsContents($island);
-      print "</div>¥n";
+      print "</div>\n";
     }
     $this->islandRecent($island, 0);
   }
@@ -486,21 +486,21 @@ END;
       }
     }
 
-    print "<div id=¥"islandMap¥" align=¥"center¥"><table border=¥"1¥"><tr><td>¥n";
-    print "<img src=¥"xbar.gif¥" width=¥"400¥" height=¥"16¥" alt=¥"¥"><br>¥n";
+    print "<div id=\"islandMap\" align=\"center\"><table border=\"1\"><tr><td>\n";
+    print "<img src=\"xbar.gif\" width=\"400\" height=\"16\" alt=\"\"><br>\n";
     for($y = 0; $y < $init->islandSize; $y++) {
-      if($y % 2 == 0) { print "<img src=¥"space{$y}.gif¥" width=¥"16¥" height=¥"32¥" alt=¥"{$y}¥">"; }
+      if($y % 2 == 0) { print "<img src=\"space{$y}.gif\" width=\"16\" height=\"32\" alt=\"{$y}\">"; }
 
       for($x = 0; $x < $init->islandSize; $x++) {
         $hako->landString($land[$x][$y], $landValue[$x][$y], $x, $y, $mode, $comStr[$x][$y]);
       }
       
-      if($y % 2 == 1) { print "<img src=¥"space{$y}.gif¥" width=¥"16¥" height=¥"32¥" alt=¥"{$y}¥">"; }
+      if($y % 2 == 1) { print "<img src=\"space{$y}.gif\" width=\"16\" height=\"32\" alt=\"{$y}\">"; }
 
       print "<br>";
     }
-    print "<div id=¥"NaviView¥">&shy;</div>";
-    print "</td></tr></table></div>¥n";
+    print "<div id=\"NaviView\">&shy;</div>";
+    print "</td></tr></table></div>\n";
   }
   //---------------------------------------------------
   // 観光者通信
@@ -584,7 +584,7 @@ END;
     // 発言番号
     for($i = 0; $i < $init->lbbsMax; $i++) {
       $j = $i + 1;
-      print "<option value=¥"{$i}¥">{$j}</option>¥n";
+      print "<option value=\"{$i}\">{$j}</option>\n";
     }
     print <<<END
 </select>
@@ -624,27 +624,27 @@ END;
       print "<tr><th>{$init->tagNumber_}{$j}{$init->_tagNumber}</th>";
       if($mode == 0) {
         // 観光者
-        print "<td>{$init->tagLbbsSS_}{$turn} &gt; {$message}{$init->_tagLbbsSS}</td></tr>¥n";
+        print "<td>{$init->tagLbbsSS_}{$turn} &gt; {$message}{$init->_tagLbbsSS}</td></tr>\n";
       } else {
         // 島主
-        print "<td>{$init->tagLbbsOW_}{$turn} &gt; {$message}{$init->_tagLbbsOW}</td></tr>¥n";
+        print "<td>{$init->tagLbbsOW_}{$turn} &gt; {$message}{$init->_tagLbbsOW}</td></tr>\n";
       }
       
     }
-    print "</table></div>¥n";
+    print "</table></div>\n";
   }
   //---------------------------------------------------
   // 島の近況
   //---------------------------------------------------
   function islandRecent($island, $mode = 0) {
     global $init;
-    print "<hr>¥n";
-    print "<div id=¥"RecentlyLog¥">¥n";
-    print "<h2>{$init->tagName_}{$island['name']}島{$init->_tagName}の近況</h2>¥n";
+    print "<hr>\n";
+    print "<div id=\"RecentlyLog\">\n";
+    print "<h2>{$init->tagName_}{$island['name']}島{$init->_tagName}の近況</h2>\n";
     for($i = 0; $i < $init->logMax; $i++) {
       LogIO::logFilePrint($i, $island['id'], $mode);
     }
-    print "</div>¥n";
+    print "</div>\n";
   }
   //---------------------------------------------------
   // 開発画面
@@ -708,7 +708,7 @@ END;
     // 計画番号
     for($i = 0; $i < $init->commandMax; $i++) {
       $j = $i + 1;
-      print "<option value=¥"{$i}¥">{$j}</option>";
+      print "<option value=\"{$i}\">{$j}</option>";
     }
     print <<<END
 </select><br>
@@ -734,7 +734,7 @@ END;
       } else {
         $s = '';
       }
-      print "<option value=¥"{$kind}¥" {$s}>{$init->comName[$kind]}({$cost})</option>¥n";
+      print "<option value=\"{$kind}\" {$s}>{$init->comName[$kind]}({$cost})</option>\n";
     }
     print <<<END
 </select>
@@ -745,17 +745,17 @@ END;
 END;
     for($i = 0; $i < $init->islandSize; $i++) {
       if($i == $data['defaultX']) {
-        print "<option value=¥"{$i}¥" selected>{$i}</option>¥n";
+        print "<option value=\"{$i}\" selected>{$i}</option>\n";
       } else {
-        print "<option value=¥"{$i}¥">{$i}</option>¥n";
+        print "<option value=\"{$i}\">{$i}</option>\n";
       }
     }
-    print "</select>, <select name=¥"POINTY¥">";
+    print "</select>, <select name=\"POINTY\">";
     for($i = 0; $i < $init->islandSize; $i++) {
       if($i == $data['defaultY']) {
-        print "<option value=¥"{$i}¥" selected>{$i}</option>¥n";
+        print "<option value=\"{$i}\" selected>{$i}</option>\n";
       } else {
-        print "<option value=¥"{$i}¥">{$i}</option>¥n";
+        print "<option value=\"{$i}\">{$i}</option>\n";
       }
     }
     print <<<END
@@ -766,7 +766,7 @@ END;
 
 END;
      for($i = 0; $i < 100; $i++)
-       print "<option value=¥"{$i}¥">{$i}</option>¥n";
+       print "<option value=\"{$i}\">{$i}</option>\n";
 
      print <<<END
 </select>
@@ -853,7 +853,7 @@ END;
 
     $j = sprintf("%02d：", $number + 1);
 
-    print "<a href=¥"javascript:void(0);¥" onclick=¥"ns({$number})¥" onkeypress=¥"ns({$number})¥">{$init->tagNumber_}{$j}{$init->_tagNumber}";
+    print "<a href=\"javascript:void(0);\" onclick=\"ns({$number})\" onkeypress=\"ns({$number})\">{$init->tagNumber_}{$j}{$init->_tagNumber}";
 
     switch($kind) {
     case $init->comDoNothing:
@@ -1016,10 +1016,10 @@ END;
 
       // コマンド登録
       if($i == $init->commandMax - 1){
-        $set_com .= "[$s_kind, $s_x, $s_y, $s_arg, $s_target]¥n";
+        $set_com .= "[$s_kind, $s_x, $s_y, $s_arg, $s_target]\n";
         $com_max .= "0";
       } else {
-        $set_com .= "[$s_kind, $s_x, $s_y, $s_arg, $s_target],¥n";
+        $set_com .= "[$s_kind, $s_x, $s_y, $s_arg, $s_target],\n";
         $com_max .= "0,";
       }
     }
@@ -1045,11 +1045,11 @@ END;
           $l_cost .= $init->unitMoney;
         }
         if($l_kind > $dd-1 && $l_kind < $ff+1) {
-          $set_listcom .= "[$l_kind, '{$init->comName[$l_kind]}', '{$l_cost}'],¥n";
+          $set_listcom .= "[$l_kind, '{$init->comName[$l_kind]}', '{$l_cost}'],\n";
           if($m == 0){
-            $click_com .= "<a href='javascript:void(0);' onclick='cominput(InputPlan, 6, {$l_kind})' onkeypress='cominput(InputPlan, 6, {$l_kind})' style='text-decoration:none'>{$init->comName[$l_kind]}({$l_cost})<¥¥/a><br>¥n";
+            $click_com .= "<a href='javascript:void(0);' onclick='cominput(InputPlan, 6, {$l_kind})' onkeypress='cominput(InputPlan, 6, {$l_kind})' style='text-decoration:none'>{$init->comName[$l_kind]}({$l_cost})<\\/a><br>\n";
           } elseif($m == 1) {
-            $click_com2 .= "<a href='javascript:void(0);' onclick='cominput(InputPlan, 6, {$l_kind})' onkeypress='cominput(InputPlan, 6, {$l_kind})' style='text-decoration:none'>{$init->comName[$l_kind]}({$l_cost})<¥¥/a><br>¥n";
+            $click_com2 .= "<a href='javascript:void(0);' onclick='cominput(InputPlan, 6, {$l_kind})' onkeypress='cominput(InputPlan, 6, {$l_kind})' style='text-decoration:none'>{$init->comName[$l_kind]}({$l_cost})<\\/a><br>\n";
           }
           $All_listCom++;
         }
@@ -1057,7 +1057,7 @@ END;
       }
       $bai = strlen($set_listcom);
       $set_listcom = substr($set_listcom, 0, $bai - 2);
-      $set_listcom .= " ],¥n";
+      $set_listcom .= " ],\n";
     }
     $bai = strlen($set_listcom);
     $set_listcom = substr($set_listcom, 0, $bai - 2);
@@ -1071,12 +1071,12 @@ END;
     $set_island = "";
     for($i = 0; $i < $hako->islandNumber; $i++) {
       $l_name = $hako->islands[$i]['name'];
-      $l_name = preg_replace("/'/", "¥'", $l_name);
+      $l_name = preg_replace("/'/", "\'", $l_name);
       $l_id = $hako->islands[$i]['id'];
       if($i == $hako->islandNumber - 1){
-        $set_island .= "[$l_id, '$l_name']¥n";
+        $set_island .= "[$l_id, '$l_name']\n";
       }else{
-        $set_island .= "[$l_id, '$l_name'],¥n";
+        $set_island .= "[$l_id, '$l_name'],\n";
       }
     }
     $defaultTarget = ($init->targetIsland == 1) ? $island['id'] : $hako->defaultTarget;
@@ -1126,7 +1126,7 @@ function init() {
   SelectList('');
   outp();
   str = plchg();
-  str = '<font color="blue">■ 送信済み ■<¥¥/font><br>' + str;
+  str = '<font color="blue">■ 送信済み ■<\\/font><br>' + str;
   disp(str, "");
 
 }
@@ -1152,7 +1152,7 @@ function cominput(theForm, x, k) {
     command[$init->commandMax - 1] = [41, 0, 0, 0, 0];
     g[$init->commandMax - 1] = '資金繰り';
     str = plchg();
-    str = '<font color="red"><strong>■ 未送信 ■<¥¥/strong><¥¥/font><br>' + str;
+    str = '<font color="red"><strong>■ 未送信 ■<\\/strong><\\/font><br>' + str;
     disp(str,"white");
     outp();
     return true;
@@ -1166,7 +1166,7 @@ function cominput(theForm, x, k) {
     g[i] = k2[i];g[i-1] = k1[i];
     ns(--i);
     str = plchg();
-    str = '<font color="red"><strong>■ 未送信 ■<¥¥/strong><¥¥/font><br>' + str;
+    str = '<font color="red"><strong>■ 未送信 ■<\\/strong><\\/font><br>' + str;
     disp(str,"white");
     outp();
     return true;
@@ -1179,7 +1179,7 @@ function cominput(theForm, x, k) {
     g[i] = k2[i];g[i + 1] = k1[i];
     ns(++i);
     str = plchg();
-    str = '<font color="red"><strong>■ 未送信 ■<¥¥/strong><¥¥/font><br>' + str;
+    str = '<font color="red"><strong>■ 未送信 ■<\\/strong><\\/font><br>' + str;
     disp(str,"white");
     outp();
     return true;
@@ -1197,7 +1197,7 @@ function cominput(theForm, x, k) {
   command[a] = [b, c, d, e, f];
   ns(++a);
   str = plchg();
-  str = '<font color="red"><b>■ 未送信 ■<¥¥/b><¥¥/font><br>' + str;
+  str = '<font color="red"><b>■ 未送信 ■<\\/b><\\/font><br>' + str;
   disp(str, "white");
   outp();
   return true;
@@ -1253,7 +1253,7 @@ function plchg() {
         strn2 = point + "で" + kind;
       } else {
         arg = c[3] * {$init->comCost[$init->comDestroy]};
-        arg = "（予¥算" + arg + "{$init->unitMoney}）";
+        arg = "（予\算" + arg + "{$init->unitMoney}）";
         strn2 = point + "で" + kind + arg;
       }
     } else if(c[0] == $init->comFarm || // 農場、工場、採掘場整備
@@ -1273,7 +1273,7 @@ function plchg() {
     strn1 +=
       '<a style="text-decoration:none;color:000000" HREF="javascript:void(0);" onclick="ns(' + i + ')" onkeypress="ns(' + i + ')"><nobr>' +
         tmpnum + (i + 1) + ':' +
-          strn2 + '<¥¥/nobr><¥¥/a><br>¥¥n';
+          strn2 + '<\\/nobr><\\/a><br>\\n';
   }
   return strn1;
 }
@@ -1293,7 +1293,7 @@ function disp(str,bgclr) {
   } else if(document.layers) {
     lay = document.layers["PARENT_LINKMSG"].document.layers["LINKMSG1"];
     lay.document.open();
-    lay.document.write("<font style='font-size:11pt'>"+str+"<¥¥/font>");
+    lay.document.write("<font style='font-size:11pt'>"+str+"<\\/font>");
     lay.document.close();
     if(bgclr != "")
       document.layers["PARENT_LINKMSG"].bgColor = bgclr;
@@ -1341,7 +1341,7 @@ function set_com(x, y, land) {
           com_str += kind;
         } else {
           arg = c[3] * 200;
-          arg = "（予¥算" + arg + "{$init->unitMoney}）";
+          arg = "（予\算" + arg + "{$init->unitMoney}）";
           com_str += kind + arg;
         }
       } else if(c[0] == $init->comFarm ||
@@ -1441,7 +1441,7 @@ END;
     // 計画番号
     for($i = 0; $i < $init->commandMax; $i++) {
       $j = $i + 1;
-      print "<option value=¥"$i¥">$j</option>¥n";
+      print "<option value=\"$i\">$j</option>\n";
     }
 
     if ($HmenuOpen == 'on') {
@@ -1462,7 +1462,7 @@ END;
 
     for($i = 0; $i < $com_count; $i++) {
       list($aa, $tmp) = split(",", $init->commandDivido[$i], 2);
-      print "<option value=¥"$i¥">{$aa}</option>¥n";
+      print "<option value=\"$i\">{$aa}</option>\n";
     }
     print <<<END
 </select><br>
@@ -1486,19 +1486,19 @@ END;
 
     for($i = 0; $i < $init->islandSize; $i++) {
       if($i == $data['defaultX']) {
-        print "<option value=¥"$i¥" selected>$i</option>¥n";
+        print "<option value=\"$i\" selected>$i</option>\n";
       } else {
-        print "<option value=¥"$i¥">$i</option>¥n";
+        print "<option value=\"$i\">$i</option>\n";
       }
     }
 
-    print "</select>, <select name=¥"POINTY¥">¥n";
+    print "</select>, <select name=\"POINTY\">\n";
 
     for($i = 0; $i < $init->islandSize; $i++) {
       if($i == $data['defaultY']) {
-        print "<option value=¥"$i¥" selected>$i</option>¥n";
+        print "<option value=\"$i\" selected>$i</option>\n";
       } else {
-        print "<option value=¥"$i¥">$i</option>¥n";
+        print "<option value=\"$i\">$i</option>\n";
       }
     }
 
@@ -1511,7 +1511,7 @@ END;
 
     // 数量
     for($i = 0; $i < 100; $i++) {
-      print "<option value=¥"$i¥">$i</option>¥n";
+      print "<option value=\"$i\">$i</option>\n";
     }
 
     print <<<END
@@ -1577,7 +1577,7 @@ END;
 class HtmlSetted extends HTML {
   function setSkin() {
     global $init;
-    print "{$init->tagBig_}スタイルシートを設定しました。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}スタイルシートを設定しました。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
   }
   function comment() {
     global $init;
@@ -1585,7 +1585,7 @@ class HtmlSetted extends HTML {
   }
   function change() {
     global $init;
-    print "{$init->tagBig_}変更完了しました{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}変更完了しました{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
   }
   function lbbsDelete() {
     global $init;
@@ -1598,86 +1598,86 @@ class HtmlSetted extends HTML {
   // コマンド削除
   function commandDelete() {
     global $init;
-    print "{$init->tagBig_}コマンドを削除しました{$init->_tagBig}<hr>¥n";
+    print "{$init->tagBig_}コマンドを削除しました{$init->_tagBig}<hr>\n";
   }
 
   // コマンド登録
   function commandAdd() {
     global $init;
-    print "{$init->tagBig_}コマンドを登録しました{$init->_tagBig}<hr>¥n";
+    print "{$init->tagBig_}コマンドを登録しました{$init->_tagBig}<hr>\n";
   }
 }
 class Error {
   function wrongPassword() {
     global $init;
-    print "{$init->tagBig_}パスワードが違います。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}パスワードが違います。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   // hakojima.datがない
   function noDataFile() {
     global $init;
-    print "{$init->tagBig_}データファイルが開けません。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}データファイルが開けません。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function newIslandFull() {
     global $init;
-    print "{$init->tagBig_}申し訳ありません、島が一杯で登録できません！！{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}申し訳ありません、島が一杯で登録できません！！{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function newIslandNoName() {
     global $init;
-    print "{$init->tagBig_}島につける名前が必要です。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}島につける名前が必要です。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function newIslandBadName() {
     global $init;
-    print "{$init->tagBig_},?()<>¥$とか入ってたり、「無人島」とかいった変な名前はやめましょうよ〜。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_},?()<>\$とか入ってたり、「無人島」とかいった変な名前はやめましょうよ〜。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function newIslandAlready() {
     global $init;
-    print "{$init->tagBig_}その島ならすでに発見されています。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}その島ならすでに発見されています。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function newIslandNoPassword() {
     global $init;
-    print "{$init->tagBig_}パスワードが必要です。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}パスワードが必要です。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function changeNoMoney() {
     global $init;
-    print "{$init->tagBig_}資金不足のため変更できません{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}資金不足のため変更できません{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function changeNothing() {
     global $init;
-    print "{$init->tagBig_}名前、パスワードともに空欄です{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}名前、パスワードともに空欄です{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function problem() {
     global $init;
-    print "{$init->tagBig_}問題発生、とりあえず戻ってください。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}問題発生、とりあえず戻ってください。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function lbbsNoMessage() {
     global $init;
-    print "{$init->tagBig_}名前または内容の欄が空欄です。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}名前または内容の欄が空欄です。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }
   function lockFail() {
     global $init;
-    print "{$init->tagBig_}同時アクセスエラーです。<BR>ブラウザの「戻る」ボタンを押し、<BR>しばらく待ってから再度お試し下さい。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}¥n";
+    print "{$init->tagBig_}同時アクセスエラーです。<BR>ブラウザの「戻る」ボタンを押し、<BR>しばらく待ってから再度お試し下さい。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
     HTML::footer();
     exit;
   }

@@ -16,7 +16,7 @@ $init = new Init;
 
 define("READ_LINE", 4096);
 $THIS_FILE =  $init->baseDir . "/hako-main.php";
-$BACK_TO_TOP = "<A HREF=¥"{$THIS_FILE}?¥">{$init->tagBig_}トップへ戻る{$init->_tagBig}</A>";
+$BACK_TO_TOP = "<A HREF=\"{$THIS_FILE}?\">{$init->tagBig_}トップへ戻る{$init->_tagBig}</A>";
 $ISLAND_TURN; // ターン数
 
 $PRODUCT_VERSION = '20060612';
@@ -59,7 +59,7 @@ class Hako extends HakoIO {
       } else {
         $s = "";
       }
-      $list .= "<option value=¥"$id¥" $s>{$name}島</option>¥n";
+      $list .= "<option value=\"$id\" $s>{$name}島</option>\n";
     }
     return $list;
   }
@@ -82,13 +82,13 @@ class Hako extends HakoIO {
       }
     }
     if($max != -1) {
-      $prizeList .= "<img src=¥"prize0.gif¥" alt=¥"$nameList¥" width=¥"16¥" height=¥"16¥"> ";
+      $prizeList .= "<img src=\"prize0.gif\" alt=\"$nameList\" width=\"16\" height=\"16\"> ";
     }
     // 賞
     $f = 1;
     for($k = 1; $k < count($init->prizeName); $k++) {
       if($flags & $f) {
-        $prizeList .= "<img src=¥"prize{$k}.gif¥" alt=¥"{$init->prizeName[$k]}¥" width=¥"16¥" height=¥"16¥"> ";
+        $prizeList .= "<img src=\"prize{$k}.gif\" alt=\"{$init->prizeName[$k]}\" width=\"16\" height=\"16\"> ";
       }
       $f = $f << 1;
     }
@@ -104,7 +104,7 @@ class Hako extends HakoIO {
       $f = $f << 1;
     }
     if($max != -1) {
-      $prizeList .= "<img src=¥"{$init->monsterImage[$max]}¥" alt=¥"{$nameList}¥" width=¥"16¥" height=¥"16¥"> ";
+      $prizeList .= "<img src=\"{$init->monsterImage[$max]}\" alt=\"{$nameList}\" width=\"16\" height=\"16\"> ";
     }
     return $prizeList;
   }
@@ -270,10 +270,10 @@ class Hako extends HakoIO {
     }
 
     if($mode == 1 || $mode == 2) {
-      print "<a href=¥"javascript: void(0);¥" onclick=¥"ps($x,$y)¥" onkeypress=¥"ps($x,$y)¥">";
-      $naviText = "{$comStr}¥¥n{$naviText}";
+      print "<a href=\"javascript: void(0);\" onclick=\"ps($x,$y)\" onkeypress=\"ps($x,$y)\">";
+      $naviText = "{$comStr}\\n{$naviText}";
     }
-    print "<img src=¥"{$image}¥" width=¥"32¥" height=¥"32¥" alt=¥"{$point} {$naviTitle} {$comStr}¥" onMouseOver=¥"Navi({$naviPos},'{$image}', '{$naviTitle}', '{$point}', '{$naviText}', {$naviExp});¥" onMouseOut=¥"NaviClose(); return false¥">";
+    print "<img src=\"{$image}\" width=\"32\" height=\"32\" alt=\"{$point} {$naviTitle} {$comStr}\" onMouseOver=\"Navi({$naviPos},'{$image}', '{$naviTitle}', '{$point}', '{$naviText}', {$naviExp});\" onMouseOut=\"NaviClose(); return false\">";
 
     // 座標設定閉じ
     if($mode == 1 || $mode == 2)
@@ -618,7 +618,7 @@ class LogIO {
           continue;
         }
       }
-      print "{$init->tagNumber_}ターン{$turn}{$m}{$init->_tagNumber}：{$message}<br>¥n";
+      print "{$init->tagNumber_}ターン{$turn}{$m}{$init->_tagNumber}：{$message}<br>\n";
     }
     fclose($fp);
   }
@@ -641,7 +641,7 @@ class LogIO {
     }
     for($i = 0; $i < $k; $i++) {
       list($turn, $his) = split(",", array_pop($history), 2);
-      print "{$init->tagNumber_}ターン{$turn}{$init->_tagNumber}：$his<br>¥n";
+      print "{$init->tagNumber_}ターン{$turn}{$init->_tagNumber}：$his<br>\n";
     }
   }
   //---------------------------------------------------
@@ -655,7 +655,7 @@ class LogIO {
       touch($fileName);
 
     $fp = fopen($fileName, "a");
-    fputs($fp, "{$GLOBALS['ISLAND_TURN']},{$str}¥n");
+    fputs($fp, "{$GLOBALS['ISLAND_TURN']},{$str}\n");
     fclose($fp);
 //    chmod($fileName, 0666);
     
@@ -682,7 +682,7 @@ class LogIO {
 
         $fp = fopen($fileName, "w");
         for($i = ($count - $init->historyMax); $i < $count; $i++) {
-          fputs($fp, "{$line[$i]}¥n");
+          fputs($fp, "{$line[$i]}\n");
         }
         fclose($fp);
 //        chmod($fileName, 0666);
@@ -722,17 +722,17 @@ class LogIO {
     // 全部逆順にして書き出す
     if(!empty($this->secretLogPool)) {
       for($i = count($this->secretLogPool) - 1; $i >= 0; $i--) {
-        fputs($fp, "{$this->secretLogPool[$i]}¥n");
+        fputs($fp, "{$this->secretLogPool[$i]}\n");
       }
     }
     if(!empty($this->lateLogPool)) {
       for($i = count($this->lateLogPool) - 1; $i >= 0; $i--) {
-        fputs($fp, "{$this->lateLogPool[$i]}¥n");
+        fputs($fp, "{$this->lateLogPool[$i]}\n");
       }
     }
     if(!empty($this->logPool)) {
       for($i = count($this->logPool) - 1; $i >= 0; $i--) {
-        fputs($fp, "{$this->logPool[$i]}¥n");
+        fputs($fp, "{$this->logPool[$i]}\n");
       }
     }
     fclose($fp);
@@ -1056,17 +1056,17 @@ class Cgi {
     $ms = gmdate("D, d M Y G:i:s", $time) . " GMT";
     if($modsince == $ms)
       // RFC 822
-      header ("HTTP/1.1 304 Not Modified¥n");
+      header ("HTTP/1.1 304 Not Modified\n");
 
     $ms = gmdate("l, d-M-y G:i:s", $time) . " GMT";
     if($modsince == $ms)
       // RFC 850
-      header ("HTTP/1.1 304 Not Modified¥n");
+      header ("HTTP/1.1 304 Not Modified\n");
 
     $ms = gmdate("D M j G:i:s Y", $time);
     if($modsince == $ms)
       // ANSI C's asctime() format
-      header ("HTTP/1.1 304 Not Modified¥n");
+      header ("HTTP/1.1 304 Not Modified\n");
   }
   //---------------------------------------------------
   // COOKIEを取得
