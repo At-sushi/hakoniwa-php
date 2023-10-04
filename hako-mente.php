@@ -9,7 +9,7 @@
 *******************************************************************/
 
 require 'config.php';
-require 'hako-html.php';
+require 'hako-main.php';
 define("READ_LINE", 1024);
 $init = new Init;
 $THIS_FILE = $init->baseDir . "/hako-mente.php";

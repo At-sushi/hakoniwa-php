@@ -441,7 +441,7 @@ class HakoIO {
       $query->execute();
 
       // 地形
-      const $landData = $query->fetch(PDO::FETCH_ASSOC);
+      $landData = $query->fetch(PDO::FETCH_ASSOC);
       $row['land'] = json_decode($landData['land']);
       $row['landValue'] = json_decode($landData['landValue']);
 
@@ -516,11 +516,10 @@ class HakoIO {
     // 地形
     if($num != 0) {
       $query = $db_handle->prepare("UPDATE islands SET land = :land, landValue = :landvalue WHERE id = :id");
-      $query->execute(array(
-        ':id' = $island['id'],
-        ':land' = json_encode($island['land']),
-        ':landValue' = json_encode($island['landValue'])
-      ));
+      $query->bindParam(':id', $island['id']);
+      $query->bindParam(':land', json_encode($island['land']));
+      $query->bindParam(':landValue', json_encode($island['landValue']));
+      $query->execute();
 
 
       // コマンド
