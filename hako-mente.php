@@ -138,7 +138,7 @@ function timeToString($t) {
   return "{$time['tm_year']}年 {$time['tm_mon']}月 {$time['tm_mday']}日 {$time['tm_hour']}時 {$time['tm_min']}分 {$time['tm_sec']}秒";
 }
 
-class Main {
+class ZMain {
   var $mode;
   var $dataSet = array();
   function execute() {
@@ -304,7 +304,7 @@ class Main {
   }
 }
 
-$start = new Main();
+$start = new ZMain();
 $start->execute();
 
 ?>

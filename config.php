@@ -54,7 +54,7 @@ class Init {
   var $dirMode		= 0755;
   
   // 1ターンが何秒か
-  var $unitTime		= 60; // 6時間
+  var $unitTime		= 6000; // 6時間
 
   // 島の最大数
   var $maxIsland	= 100;

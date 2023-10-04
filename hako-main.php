@@ -296,8 +296,8 @@ class HakoIO {
   {
       global $init;
 
-      $db_handle = new PDO(
-          "pgsql;host=localhost;dbname=hakoniwa",
+      $this->db_handle = new PDO(
+          "pgsql:host=localhost;dbname=hakoniwa",
           $init->db_id,
           $init->db_pass,
           [
@@ -310,25 +310,25 @@ class HakoIO {
 
   // テーブル初期化・作成
   public function createTable(int $now) {
-    $db_handle->beginTransaction();
+    $this->db_handle->beginTransaction();
 
     // 前処理
-    deleteTable();
+    $this->deleteTable();
 
     // ゲーム全体用データ
-    $db_handle->exec("CREATE TABLE games (
+    $this->db_handle->exec("CREATE TABLE games (
       islandTurn        INT,
       islandLastTime    INT,
       islandNumber      INT,
-      islantNextID      INT
+      islandNextID      INT
       )");
 
-    $query = $db_handle->prepare("INSERT INTO games VALUES (1, :now, 0, 1)");
+    $query = $this->db_handle->prepare("INSERT INTO games VALUES (1, :now, 0, 1)");
     $query->bindParam(":now", $now);
     $query->execute();
 
     // 島データ
-    $db_handle->exec("CREATE TABLE islands ("
+    $this->db_handle->exec("CREATE TABLE islands ("
       ."id            INT,"
       ."name          VARCHAR(128),"
       ."owner         VARCHAR(128),"
@@ -350,22 +350,22 @@ class HakoIO {
       ."CONSTRAINT id_key PRIMARY KEY(id))");
 
     // コマンド
-    $db_handle->exec("CREATE TABLE commands (
+    $this->db_handle->exec("CREATE TABLE commands (
       islandID  INT,
       line      INT,
       kind      INT,
       x         INT,
       y         INT,
-      arg       INT
-      CONSTRAINT id_key PRIMARY KEY(islandID, line)
+      arg       INT,
+      CONSTRAINT command_id_key PRIMARY KEY(islandID, line)
       )");
 
-    $db_handle->commit();
+    $this->db_handle->commit();
   }
 
   // 全削除
   public function deleteTable() {
-    $db_handle->exec("DROP TABLE IF EXISTS games, islands, commands");
+    $this->db_handle->exec("DROP TABLE IF EXISTS games, islands, commands");
   }
 
   //---------------------------------------------------
@@ -376,11 +376,11 @@ class HakoIO {
     global $init;
     $num = $cgi->dataSet['ISLANDID'];
 
-    if ($db_handle == null) {
+    if ($this->db_handle == null) {
       return false;
     }
 
-    $query = $db_handle->query("SELECT * FROM games LIMIT 1");
+    $query = $this->db_handle->query("SELECT * FROM games LIMIT 1");
     [
       $this->islandTurn,
       $this->islandLastTime,
@@ -399,7 +399,7 @@ class HakoIO {
     }
 
     // 島データをフェッチ
-    $query = $db_handle->prepare("SELECT "
+    $query = $this->db_handle->prepare("SELECT "
           ."id,"
           ."name,"
           ."owner,"
@@ -436,7 +436,7 @@ class HakoIO {
     $this->idToName[$id] = $name;
 
     if(($num == -1) || ($num == $row['id'])) {
-      $query = $db_handle->prepare("SELECT land, landValue FROM islands WHERE id = :id");
+      $query = $this->db_handle->prepare("SELECT land, landValue FROM islands WHERE id = :id");
       $query->bindParam(":id", $row['id']);
       $query->execute();
 
@@ -446,7 +446,7 @@ class HakoIO {
       $row['landValue'] = json_decode($landData['landValue']);
 
       // コマンド
-      $query = $db_handle->prepare("SELECT kind, target, x, y, arg FROM commands WHERE islandID = :id ORDER BY line LIMIT :num");
+      $query = $this->db_handle->prepare("SELECT kind, target, x, y, arg FROM commands WHERE islandID = :id ORDER BY line LIMIT :num");
       $query->bindParam(":id", $row['id']);
       $query->bindParam(":num", $init->commandMax);
       $query->execute();
@@ -459,11 +459,10 @@ class HakoIO {
   // 全島データを書き込む
   //---------------------------------------------------
   function writeIslandsFile($num = 0, bool $create = false) {
-    $db_handle->beginTransaction();
+    $this->db_handle->beginTransaction();
 
-    $query = $db_handle->prepare("UPDATE games SET "
-    ."islandTurm = :turn, islandLastTime = :lasttime, islandNumber, :number, islandNextID = :nextid"
-    ." LIMIT 1");
+    $query = $this->db_handle->prepare("UPDATE games SET "
+    ."islandTurn = :turn, islandLastTime = :lasttime, islandNumber = :number, islandNextID = :nextid");
     $query->bindParam(":turn", $this->islandTurn);
     $query->bindParam(":lasttime", $this->islandLastTime);
     $query->bindParam(":number", $this->islandNumber);
@@ -477,10 +476,10 @@ class HakoIO {
       }
     }
     else {
-      $this->writeIsland($fp, $num, $island['id'], $create);
+      $this->writeIsland($fp, $num, $this->islands[$num], $create);
     }
 
-    $db_handle->commit();
+    $this->db_handle->commit();
   }
   //---------------------------------------------------
   // 島ひとつ書き込む
@@ -490,12 +489,12 @@ class HakoIO {
 
     // 暫定
     if ($create == true) {
-      $query = $db_handle->prepare("INSERT INTO islands (id) VALUES (:id)");
+      $query = $this->db_handle->prepare("INSERT INTO islands (id) VALUES (:id)");
       $query->bindParam(":id", $num);
       $query->execute();
     }
 
-    $query = $db_handle->prepare("UPDATE islands SET "
+    $query = $this->db_handle->prepare("UPDATE islands SET "
           ."name = :name,"
           ."owner = :owner,"
           ."prize = :prize,"
@@ -515,7 +514,7 @@ class HakoIO {
     $query->execute($island);
     // 地形
     if($num != 0) {
-      $query = $db_handle->prepare("UPDATE islands SET land = :land, landValue = :landvalue WHERE id = :id");
+      $query = $this->db_handle->prepare("UPDATE islands SET land = :land, landValue = :landvalue WHERE id = :id");
       $query->bindParam(':id', $island['id']);
       $query->bindParam(':land', json_encode($island['land']));
       $query->bindParam(':landValue', json_encode($island['landValue']));
@@ -527,13 +526,13 @@ class HakoIO {
       for($i = 0; $i < $init->commandMax; $i++) {
         // 暫定措置
         if ($create == true) {
-          $query = $db_handle->prepare("INSERT INTO commands (islandID, line) VALUES (:id, :line)");
+          $query = $this->db_handle->prepare("INSERT INTO commands (islandID, line) VALUES (:id, :line)");
           $query->bindParam(":id", $island['id']);
           $query->bindParam(":line", $i);
           $query->execute();
         }
   
-        $query = $db_handle->prepare("UPDATE commands SET kind = :kind, target = :target, x = :x, y = :y, arg = :arg WHERE islandID = :id AND line = :line");
+        $query = $this->db_handle->prepare("UPDATE commands SET kind = :kind, target = :target, x = :x, y = :y, arg = :arg WHERE islandID = :id AND line = :line");
         $query->bindParam(":id", $island['id']);
         $query->bindParam(":line", $i);
         $query->execute($command);
@@ -546,11 +545,11 @@ class HakoIO {
   public function deleteIsland(int $id) {
     $query->beginTransaction();
 
-    $query = $db_handle->prepare("DELETE FROM islands WHERE id = :id");
+    $query = $this->db_handle->prepare("DELETE FROM islands WHERE id = :id");
     $query->bindParam(":id", $id);
     $query->execute();
 
-    $query = $db_handle->prepare("DELETE FROM commands WHERE islandID = :id");
+    $query = $this->db_handle->prepare("DELETE FROM commands WHERE islandID = :id");
     $query->bindParam(":id", $id);
     $query->execute();
 
@@ -977,7 +976,7 @@ class Util {
     }
     // ロック失敗
     fclose($fp);
-    Error::lockFail();
+    HakoError::lockFail();
     return FALSE;
   }
   //---------------------------------------------------
@@ -1169,7 +1168,7 @@ class Main {
 
     if(!$hako->readIslands($cgi)) {
       HTML::header($cgi->dataSet);
-      Error::noDataFile();
+      HakoError::noDataFile();
       HTML::footer();
       Util::unlock($lock);
       exit();

@@ -8,9 +8,11 @@
 
 *******************************************************************/
 
-require 'jcode.phps';
-require 'config.php';
-require 'hako-html.php';
+# require 'jcode.phps';
+# require 'config.php';
+# require 'hako-html.php';
+require 'hako-main.php';
+
 define("READ_LINE", 1024);
 $init = new Init;
 $THIS_FILE = $init->baseDir . "/hako-mente-safemode.php";
@@ -147,7 +149,7 @@ function timeToString($t) {
   return "{$time['tm_year']}年 {$time['tm_mon']}月 {$time['tm_mday']}日 {$time['tm_hour']}時 {$time['tm_min']}分 {$time['tm_sec']}秒";
 }
 
-class Main {
+class ZMain {
   var $mode;
   var $dataSet = array();
   function execute() {
@@ -232,6 +234,11 @@ class Main {
     fputs($fp, "0\n");
     fputs($fp, "1\n");
     fclose($fp);
+  
+    // DB初期化
+    $hako = new Hako;
+
+    $hako->createTable($now);
   }
   function delMode() {
     global $init;
@@ -241,6 +248,11 @@ class Main {
       $dirName = "data.bak{$this->dataSet['NUMBER']}";
     }
     $this->rmTree($dirName);
+
+    // DB消去
+    $hako = new Hako;
+
+    $hako->deleteTable();
   }
   function timeMode() {
     $year = $this->dataSet['YEAR'];
@@ -304,7 +316,7 @@ class Main {
   }
 }
 
-$start = new Main();
+$start = new ZMain();
 $start->execute();
 
 ?>

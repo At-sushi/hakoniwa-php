@@ -377,7 +377,7 @@ class HtmlMap extends HTML {
 
     // パスワードチェック
     if(!Util::checkPassword($island['password'], $data['PASSWORD'])){
-      Error::wrongPassword();
+      HakoError::wrongPassword();
       return;
     }
     $this->tempOwer($hako, $data, $number);
@@ -930,7 +930,7 @@ END;
     $number = $hako->idToNumber[$id];
     // なぜかその島がない場合
     if($number < 0 || $number > $hako->islandNumber) {
-      Error::problem();
+      HakoError::problem();
       return;
     }
     $island = $hako->islands[$number];
@@ -1607,7 +1607,7 @@ class HtmlSetted extends HTML {
     print "{$init->tagBig_}コマンドを登録しました{$init->_tagBig}<hr>\n";
   }
 }
-class Error {
+class HakoError {
   function wrongPassword() {
     global $init;
     print "{$init->tagBig_}パスワードが違います。{$init->_tagBig}{$GLOBALS['BACK_TO_TOP']}\n";
