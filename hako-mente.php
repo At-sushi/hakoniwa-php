@@ -8,7 +8,7 @@
 
 *******************************************************************/
 
-require 'config.php';
+// require 'config.php';
 require 'hako-main.php';
 define("READ_LINE", 1024);
 $init = new Init;
