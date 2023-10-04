@@ -1,0 +1,267 @@
+@charset "Shift_JIS";
+/********************************************************************/
+/*  Edited By : Watson                                              */
+/********************************************************************/
+
+/*------------------------------------------------------------------*/
+/* 全体                                                             */
+/*------------------------------------------------------------------*/
+body {
+	font-family	: sans-serif;
+	color		: #333;
+	background-color: #F0F8FF;
+	background-image: url('skb/skb_background.gif');
+	font-size	: 10pt;
+}
+a {
+	color		: #4169E1;
+	text-decoration	: none;
+}
+a:visited {
+	color		: #4682B4;
+}
+a:active {
+	color		: #008B8B;
+}
+a:hover {
+	color		: #008B8B;
+	background-color: #99decc;
+}
+table {
+	border		: none;
+}
+th {
+	border-style	: solid;
+	border-color	: #1E90FF;
+	border-width	: 1px;
+	font-size	: 10pt;
+	white-space	: nowrap;
+}
+td {
+	border-style	: solid;
+	border-color	: #00BFFF
+	border-width	: 1px;
+	font-size	: 10pt;
+	white-space	: nowrap;
+}
+img {
+	border		: none;
+}
+/* 更新時刻 */
+h2.lastModified {
+	font-size	: 90%;
+}
+#islandInfo .big,
+#CommentBox .big,
+#localBBS .big,
+#RecentlyLog .big,
+H2 {
+	display		: block;
+	text-align	: left;
+	font-weight	: bold;
+	font-size	: 14pt;
+	color		: #6495ED;
+	background-image: url('skb/skb_bg_h1.png');
+	border		: solid #6495ED 1px;
+	padding-left	: 40px;
+	text-transform	: uppercase;
+}
+hr {
+	border		: dashed #4169E1 1px;
+}
+#LinkFoot {
+	background-color: #F0FFFF;
+	border		: solid #6495ED 1px;
+	width		: 50%;
+	margin-left	: 25%;
+	padding		: 5px;
+}
+/**********************************************************************/
+
+/* TOPページ ---------------------------------------------------------*/
+/* タイトル */
+h1 {
+	margin		: 0.5em 0px 1em 0px;
+	font-size	: 32pt;
+	font-style	: italic;
+	font-weight	: bold;
+	color		: #C0C0C0;
+	letter-spacing	: 5px;
+	text-transform	: uppercase;
+	border-style	: solid;
+	border-color	: #008B8B;
+	border-width	: 0px 0px 1px 0px;
+	width		: 60%;
+	background-image: url('skb/skb_bg_title.gif');
+	background-position: 100% 100%;
+	background-repeat: no-repeat;
+}
+h1:first-letter {
+	color		: #4169E1;
+	font-size	: 48pt;
+}
+h2.Turn{
+	border		: none;
+	background	: none;
+	padding-left	: 10px;
+}
+#HistoryLog, 
+#RecentlyLog {
+	white-space	: nowrap;
+}
+
+/* 大きい文字 */
+.big {
+	font-size	: 24pt !important;
+}
+/**********************************************************************/
+
+/* Mapページ ---------------------------------------------------------*/
+/* ナビゲーション関係 */
+#NaviView{
+	visibility	: hidden;
+	z-index		: 1;
+	position	: absolute;
+	background-color: #F0FFFF;
+	border		: groove #4169E1;
+	border-width	: 3px;
+	width		: 140px;
+	margin-top 	: -224px;
+	padding		: 3px;
+	text-align	: left;
+}
+.NaviTitle {
+	font-size	: 12pt;
+	border-style	: solid;
+	border-color	: #000080;
+	border-width	: 0 0 2px 0;
+}
+.NaviImg {
+	margin		: 5px;
+}
+.NaviText {
+	margin-left	: 15px;
+}
+#islandInfo table {
+	text-align	: center;
+	width		: 100%;
+}
+#islandMap, #islandMap table {
+	margin		: auto;
+}
+#localBBS table th {
+	background-color: #AFEEEE;
+}
+/* 島の名前など */
+.islName {
+	font-weight	: bold;
+	color		: #A06040;
+}
+/* 薄くなった島の名前 */
+.islName2 {
+	font-weight	: bold;
+	color		: #808080;
+}
+/* 順位の番号など */
+.number {
+	font-weight	: bold;
+	color		: #6495ED;
+}
+/* 順位表における見だし */
+.head {
+	font-weight	: bold;
+	color		: #000080;
+}
+/* 開発計画名 */
+.command {
+	font-weight	: bold;
+	color		: #D08000;
+}
+/* 災害 */
+.disaster {
+	font-weight	: bold;
+	color		: #FF0000;
+}
+/* 観光者通信（観光者） */
+.lbbsSS {
+	font-weight	: bold;
+	color		: #0000FF;
+}
+/* 観光者通信（オーナ） */
+.lbbsOW {
+	font-weight	: bold;
+	color		: #FF0000;
+}
+/* お金 */
+.money {
+	font-weight	: bold;
+	color		: goldenrod;
+}
+/* 食料 */
+.food {
+	font-weight	: bold;
+	color		: lightseagreen;
+}
+/* 注意 */
+.attention {
+	font-weight	: bold;
+	color		: #FF0000;
+}
+/* 通常の文字色 */
+.normal {
+	font-weight	: bold;
+	color		: #000000;
+}
+
+/* Point欄 */
+.PoinCell {
+	background-color: moccasin;
+}
+
+/* 新規コメント */
+.new {
+	color		: #f00;
+	background-color: transparent;
+}
+/* 怪獣出没数 */
+.monster{
+	font-size	: 8pt;
+	color		: #f00;
+}
+/**********************************************************************/
+/* 背景色 */
+/* 順位表見出し */
+.TitleCell {
+	background-color: #87CEFA;
+}
+/* 順位表順位 */
+.NumberCell {
+	background-color: #87CEFA;
+}
+/* 順位表島の名前 */
+.NameCell {
+	background-color: #F5FFFA;
+}
+/* 順位表島の情報 */
+.InfoCell {
+	background-color: #E0FFFF;
+	text-align: right;
+}
+/* 順位表コメント欄 */
+.CommentCell {
+	background-color: #FFFFFF;
+	text-align	: left;
+}
+/* 開発計画フォーム */
+.InputCell {
+	background-color: #AFEEEE;
+}
+/* 開発計画地図 */
+.MapCell {
+	background-color: #FFFFFF;
+}
+/* 開発計画入力済み計画 */
+.CommandCell {
+	background-color: #FFFFFF;
+	white-space: normal;
+}
