@@ -61,6 +61,7 @@ class Make {
 
     Turn::estimate($island);
     $hako->islands[$newNumber] = $island;
+    $hako->idToNumber[$island['id']] = $newNumber;
     $hako->writeIslandsFile($island['id'], true);
 
     $log->discover($island['name']);

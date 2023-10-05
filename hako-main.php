@@ -416,7 +416,7 @@ class HakoIO {
           ."factory,"
           ."mountain,"
           ."monster"
-          ." FROM islands LIMIT :num");
+          ." FROM islands ORDER BY id LIMIT :num");
     $query->bindParam(":num", $this->islandNumber);
     $query->execute();
 
@@ -471,12 +471,12 @@ class HakoIO {
 
     if ($num <= 0) {
       // 全部更新する
-      for ($i = 0; $i < $this->islandNumber; $i++) {
-        $this->writeIsland($fp, $num, $this->islands[$i], $create);
+      for ($i = 1; $i < $this->islandNumber; $i++) {
+		$this->writeIsland($fp, $num, $this->islands[$i], $create);
       }
     }
     else {
-      $this->writeIsland($fp, $num, $this->islands[$num], $create);
+      $this->writeIsland($fp, $num, $this->islands[$this->idToNumber[$num]], $create);
     }
 
     $this->db_handle->commit();
