@@ -527,7 +527,7 @@ class MakeJS extends Make {
     }
     // モードで分岐
     $command = $island['command'];
-    $comary = split(" " , $data['COMARY']);
+    $comary = explode(" " , $data['COMARY']);
     
     for($i = 0; $i < $init->commandMax; $i++) {
       $pos = $i * 5;
@@ -1382,7 +1382,7 @@ class Turn {
 
                   // 賞関係
 //                  $prize = $island['prize'];
-                  list($flags, $monsters, $turns) = split(",", $prize, 3);
+                  list($flags, $monsters, $turns) = explode(",", $prize, 3);
                   $v = 1 << $monsSpec['kind'];
                   $monsters |= $v;
 
@@ -1505,7 +1505,7 @@ class Turn {
           // 難民の数が一定数以上なら、平和賞の可能性あり
           if($achive >= 200) {
             $prize = $island['prize'];
-            list($flags, $monsters, $turns) = split(",", $prize, 3);
+            list($flags, $monsters, $turns) = explode(",", $prize, 3);
 
             if((!($flags & 8)) &&  $achive >= 200){
               $flags |= 8;
@@ -2226,7 +2226,7 @@ class Turn {
     $pop = $island['pop'];
     $damage = $island['oldPop'] - $pop;
     $prize = $island['prize'];
-    list($flags, $monsters, $turns) = split(",", $prize, 3);
+    list($flags, $monsters, $turns) = explode(",", $prize, 3);
 
 
     // 繁栄賞

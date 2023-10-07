@@ -68,9 +68,9 @@ class Hako extends HakoIO {
   //---------------------------------------------------
   function getPrizeList($prize) {
     global $init;
-    list($flags, $monsters, $turns) = split(",", $prize, 3);
+    list($flags, $monsters, $turns) = explode(",", $prize, 3);
 
-    $turns = split(",", $turns);
+    $turns = explode(",", $turns);
     $prizeList = "";
     // ターン杯
     $max = -1;
@@ -354,6 +354,7 @@ class HakoIO {
       islandID  INT,
       line      INT,
       kind      INT,
+      target	INT,
       x         INT,
       y         INT,
       arg       INT,
@@ -511,10 +512,15 @@ class HakoIO {
           ."mountain = :mountain,"
           ."monster = :monster"
           ." WHERE id = :id");
-    $query->execute($island);
+    $tmpData = $island;
+    unset($tmpData['land']);
+    unset($tmpData['landValue']);
+    unset($tmpData['command']);
+    unset($tmpData['lbbs']);
+    $query->execute($tmpData);
     // 地形
     if($num != 0) {
-      $query = $this->db_handle->prepare("UPDATE islands SET land = :land, landValue = :landvalue WHERE id = :id");
+      $query = $this->db_handle->prepare("UPDATE islands SET land = :land, landValue = :landValue WHERE id = :id");
       $query->bindParam(':id', $island['id']);
       $query->bindParam(':land', json_encode($island['land']));
       $query->bindParam(':landValue', json_encode($island['landValue']));
@@ -522,20 +528,18 @@ class HakoIO {
 
 
       // コマンド
-      $command = $island['command'];
-      for($i = 0; $i < $init->commandMax; $i++) {
         // 暫定措置
         if ($create == true) {
-          $query = $this->db_handle->prepare("INSERT INTO commands (islandID, line) VALUES (:id, :line)");
-          $query->bindParam(":id", $island['id']);
-          $query->bindParam(":line", $i);
-          $query->execute();
+          $query = $this->db_handle->prepare("INSERT INTO commands (islandID, line, kind, target, x, y, arg) VALUES (:id, :line, :kind, :target, :x, :y, :arg)");
         }
-  
-        $query = $this->db_handle->prepare("UPDATE commands SET kind = :kind, target = :target, x = :x, y = :y, arg = :arg WHERE islandID = :id AND line = :line");
-        $query->bindParam(":id", $island['id']);
-        $query->bindParam(":line", $i);
-        $query->execute($command);
+ 	else { 
+          $query = $this->db_handle->prepare("UPDATE commands SET kind = :kind, target = :target, x = :x, y = :y, arg = :arg WHERE islandID = :id AND line = :line");
+	} 
+      $command = $island['command'];
+      for($i = 0; $i < $init->commandMax; $i++) {
+	$command[$i]["id"] = $island['id'];
+	$command[$i]["line"] = $i;
+        $query->execute($command[$i]);
       }
     }
   }
@@ -602,7 +606,7 @@ class LogIO {
     $fp = fopen($fileName, "r");
 
     while($line = chop(fgets($fp, READ_LINE))) {
-      list($m, $turn, $id1, $id2, $message) = split(",", $line, 5);
+      list($m, $turn, $id1, $id2, $message) = explode(",", $line, 5);
       if($m == 1) {
         if(($mode == 0) || ($id1 != $id)) {
           continue;
@@ -638,7 +642,7 @@ class LogIO {
       $k++;
     }
     for($i = 0; $i < $k; $i++) {
-      list($turn, $his) = split(",", array_pop($history), 2);
+      list($turn, $his) = explode(",", array_pop($history), 2);
       print "{$init->tagNumber_}ターン{$turn}{$init->_tagNumber}：$his<br>\n";
     }
   }
