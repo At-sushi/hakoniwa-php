@@ -310,10 +310,10 @@ class HakoIO {
 
   // テーブル初期化・作成
   public function createTable(int $now) {
-    $this->db_handle->beginTransaction();
-
     // 前処理
     $this->deleteTable();
+
+    $this->db_handle->beginTransaction();
 
     // ゲーム全体用データ
     $this->db_handle->exec("CREATE TABLE games (
@@ -443,8 +443,8 @@ class HakoIO {
 
       // 地形
       $landData = $query->fetch(PDO::FETCH_ASSOC);
-      $row['land'] = json_decode($landData['land']);
-      $row['landValue'] = json_decode($landData['landValue']);
+      $row['land'] = json_decode($landData['land'], true);
+      $row['landValue'] = json_decode($landData['landvalue'], true);
 
       // コマンド
       $query = $this->db_handle->prepare("SELECT kind, target, x, y, arg FROM commands WHERE islandID = :id ORDER BY line LIMIT :num");
@@ -472,7 +472,7 @@ class HakoIO {
 
     if ($num <= 0) {
       // 全部更新する
-      for ($i = 1; $i < $this->islandNumber; $i++) {
+      for ($i = 0; $i < $this->islandNumber; $i++) {
 		$this->writeIsland($fp, $num, $this->islands[$i], $create);
       }
     }
@@ -517,13 +517,15 @@ class HakoIO {
     unset($tmpData['landValue']);
     unset($tmpData['command']);
     unset($tmpData['lbbs']);
+    unset($tmpData['oldPop']);
     $query->execute($tmpData);
+
     // 地形
     if($num != 0) {
       $query = $this->db_handle->prepare("UPDATE islands SET land = :land, landValue = :landValue WHERE id = :id");
       $query->bindParam(':id', $island['id']);
-      $query->bindParam(':land', json_encode($island['land']));
-      $query->bindParam(':landValue', json_encode($island['landValue']));
+      $query->bindParam(':land', json_encode($island['land'], JSON_NUMERIC_CHECK));
+      $query->bindParam(':landValue', json_encode($island['landValue'], JSON_NUMERIC_CHECK));
       $query->execute();
 
 

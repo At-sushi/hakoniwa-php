@@ -620,7 +620,7 @@ END;
     for($i = 0; $i < $init->lbbsMax; $i++) {
       $j = $i + 1;
       $line = $lbbs[$i];
-      list($mode, $turn, $message) = split(">", $line);
+      list($mode, $turn, $message) = explode(">", $line);
       print "<tr><th>{$init->tagNumber_}{$j}{$init->_tagNumber}</th>";
       if($mode == 0) {
         // 観光者
@@ -1032,7 +1032,7 @@ END;
     $All_listCom = 0;
     $com_count = count($init->commandDivido);
     for($m = 0; $m < $com_count; $m++) {
-      list($aa,$dd,$ff) = split(",", $init->commandDivido[$m]);
+      list($aa,$dd,$ff) = explode(",", $init->commandDivido[$m]);
       $set_listcom .= "[ ";
       for($i = 0; $i < $init->commandTotal; $i++) {
         $l_kind = $init->comList[$i];
@@ -1461,7 +1461,7 @@ END;
 END;
 
     for($i = 0; $i < $com_count; $i++) {
-      list($aa, $tmp) = split(",", $init->commandDivido[$i], 2);
+      list($aa, $tmp) = explode(",", $init->commandDivido[$i], 2);
       print "<option value=\"$i\">{$aa}</option>\n";
     }
     print <<<END

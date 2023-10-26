@@ -18,13 +18,13 @@ class Init {
   // 各種設定値
   //----------------------------------------
   // プログラムを置くディレクトリ
-  var $baseDir		= "http://34.168.36.77/hakoniwa-php";
+  var $baseDir		= "http://35.212.229.50/hakoniwa-php";
 
   // 画像を置くディレクトリ
-  var $imgDir		= "http://34.168.36.77/hako_image";
+  var $imgDir		= "http://35.212.229.50/hako_image";
 
   // CSSファイルを置くディレクトリ
-  var $cssDir		= "http://34.168.36.77/hakoniwa-php/css";
+  var $cssDir		= "http://35.212.229.50/hakoniwa-php/css";
 
   // CSSリスト
   var $cssList		= array('SkyBlue.css', 'Autumn.css');

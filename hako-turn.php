@@ -199,7 +199,6 @@ class Make {
       'land'	  => $land,
       'landValue' => $landValue,
       'command'	  => $command,
-      'lbbs'	  => $lbbs,
       'prize'	  => '0,0,',
       );    
   }
@@ -681,9 +680,9 @@ class Turn {
     $name = $island['name'];
     $id   = $island['id'];
     $land = $island['land'];
-    $landValue = &$island['landValue'];
+    $landValue = $island['landValue'];
     $landKind = &$land[$x][$y];
-    $lv   = $landValue[$x][$y];
+    $lv   = &$landValue[$x][$y];
     $cost = $init->comCost[$kind];
     $comName = $init->comName[$kind];
     $point = "({$x},{$y})";
@@ -1609,6 +1608,8 @@ class Turn {
       $this->log->giveup($id, $name);
       $island['dead'] = 1;
       unlink("{$init->dirName}/island.{$id}");
+      // DB削除処理
+      $hako->deleteIsland($id);
 
       $returnMode = 1;
       break;
