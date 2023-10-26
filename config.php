@@ -353,7 +353,7 @@ class Init {
   var $ay = array(0,-1, 0, 1, 1, 0,-1,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2);
 
   // コメントなどに、予\定のように\が勝手に追加される
-  var $stripslashes;
+  var $stripslashes = false;
 
   function setVariable() {
     $this->pointNumber = $this->islandSize * $this->islandSize;
@@ -454,8 +454,6 @@ class Init {
     // 海外のサーバに設置する場合は次の行にある//をはずす。
     // putenv("TZ=JST-9");
 
-    // 予\定のように\が勝手に追加される
-    $this->stripslashes	= get_magic_quotes_gpc();
   }
 }
 ?>
