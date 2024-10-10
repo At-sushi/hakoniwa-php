@@ -1270,6 +1270,8 @@ class Main {
     exit();
   }
 }
-$start = new Main;
-$start->execute();
+if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
+    $start = new Main;
+    $start->execute();
+}
 ?>
