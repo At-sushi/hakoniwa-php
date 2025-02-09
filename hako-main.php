@@ -383,7 +383,7 @@ class HakoIO {
   //---------------------------------------------------
   public function readIslandsFile(&$cgi, $is_update = true) {
     global $init;
-    const $post_prefix = $is_update ? " FOR UPDATE" : "";
+    $post_prefix = $is_update ? " FOR UPDATE" : "";
     $num = $cgi->dataSet['ISLANDID'];
 
     if ($this->db_handle == null) {
@@ -668,7 +668,7 @@ class LogIO {
       touch($fileName);
 
     $fp = fopen($fileName, "a");
-    flock(&fp, LOCK_EX);
+    flock($fp, LOCK_EX);
     fputs($fp, "{$GLOBALS['ISLAND_TURN']},{$str}\n");
     fclose($fp);
 //    chmod($fileName, 0666);
