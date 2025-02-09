@@ -297,7 +297,7 @@ class HakoIO {
       global $init;
 
       $this->db_handle = new PDO(
-          "pgsql:host=localhost;dbname=hakoniwa",
+          "pgsql:host=$init->db_hostname;dbname=$init->db_name",
           $init->db_id,
           $init->db_pass,
           [
@@ -306,6 +306,14 @@ class HakoIO {
               PDO::ATTR_PERSISTENT => true,
           ]
       );
+  }
+
+  public function beginTransaction() {
+    $this->db_handle->beginTransaction();
+  }
+
+  public function endTransaction() {
+    $this->db_handle->commit();
   }
 
   // テーブル初期化・作成
@@ -373,15 +381,16 @@ class HakoIO {
   // 全島データを読み込む
   // 'mode'が変わる可能性があるので$cgiを参照で受け取る
   //---------------------------------------------------
-  public function readIslandsFile(&$cgi) {
+  public function readIslandsFile(&$cgi, $is_update = true) {
     global $init;
+    const $post_prefix = $is_update ? " FOR UPDATE" : "";
     $num = $cgi->dataSet['ISLANDID'];
 
     if ($this->db_handle == null) {
       return false;
     }
 
-    $query = $this->db_handle->query("SELECT * FROM games LIMIT 1");
+    $query = $this->db_handle->query("SELECT * FROM games LIMIT 1" + $post_prefix);
     [
       $this->islandTurn,
       $this->islandLastTime,
@@ -417,12 +426,12 @@ class HakoIO {
           ."factory,"
           ."mountain,"
           ."monster"
-          ." FROM islands ORDER BY id LIMIT :num");
+          ." FROM islands ORDER BY id LIMIT :num" + $post_prefix);
     $query->bindParam(":num", $this->islandNumber);
     $query->execute();
 
     for($i = 0; $i < $this->islandNumber; $i++) {
-      $this->islands[$i] = $this->readIsland($query->fetch(PDO::FETCH_ASSOC), $num);
+      $this->islands[$i] = $this->readIsland($query->fetch(PDO::FETCH_ASSOC), $num, $post_prefix);
       $this->idToNumber[$this->islands[$i]['id']] = $i;
     }
 
@@ -431,13 +440,13 @@ class HakoIO {
   //---------------------------------------------------
   // 島ひとつ読み込む
   //---------------------------------------------------
-  private function readIsland($row, $num) {
+  private function readIsland($row, $num, $post_prefix) {
     global $init;
 
     $this->idToName[$id] = $name;
 
     if(($num == -1) || ($num == $row['id'])) {
-      $query = $this->db_handle->prepare("SELECT land, landValue FROM islands WHERE id = :id");
+      $query = $this->db_handle->prepare("SELECT land, landValue FROM islands WHERE id = :id + $post_prefix");
       $query->bindParam(":id", $row['id']);
       $query->execute();
 
@@ -447,7 +456,7 @@ class HakoIO {
       $row['landValue'] = json_decode($landData['landvalue'], true);
 
       // コマンド
-      $query = $this->db_handle->prepare("SELECT kind, target, x, y, arg FROM commands WHERE islandID = :id ORDER BY line LIMIT :num");
+      $query = $this->db_handle->prepare("SELECT kind, target, x, y, arg FROM commands WHERE islandID = :id ORDER BY line LIMIT :num" + $post_prefix);
       $query->bindParam(":id", $row['id']);
       $query->bindParam(":num", $init->commandMax);
       $query->execute();
@@ -659,6 +668,7 @@ class LogIO {
       touch($fileName);
 
     $fp = fopen($fileName, "a");
+    flock(&fp, LOCK_EX);
     fputs($fp, "{$GLOBALS['ISLAND_TURN']},{$str}\n");
     fclose($fp);
 //    chmod($fileName, 0666);
@@ -685,6 +695,7 @@ class LogIO {
           touch($fileName);
 
         $fp = fopen($fileName, "w");
+        flock($fp, LOCK_EX);
         for($i = ($count - $init->historyMax); $i < $count; $i++) {
           fputs($fp, "{$line[$i]}\n");
         }
@@ -722,6 +733,7 @@ class LogIO {
       touch($fileName);
 
     $fp = fopen($fileName, "w");
+    flock($fp, LOCK_EX);
 
     // 全部逆順にして書き出す
     if(!empty($this->secretLogPool)) {
@@ -989,7 +1001,6 @@ class Util {
   // ファイルをアンロックする
   //---------------------------------------------------
   function unlock($fp) {
-    flock($fp, LOCK_UN);
     fclose($fp);
   }
 }
@@ -1167,10 +1178,7 @@ class Main {
     $cgi->parseInputData();
     $cgi->getCookies();
 
-    $lock = Util::lock($fp);
-    if(FALSE == $lock) {
-      exit;
-    }
+    $hako->beginTransaction();
 
     if(!$hako->readIslands($cgi)) {
       HTML::header($cgi->dataSet);
@@ -1266,7 +1274,7 @@ class Main {
       $html->main($hako, $cgi->dataSet);
       $html->footer();
     }
-    Util::unlock($lock);
+    $hako->endTransaction();
     exit();
   }
 }

@@ -36,6 +36,8 @@ class Init {
   var $specialPassword	= "hogehogehoge";
 
   // DBログイン情報
+  const $db_hostname = "localhost";
+  const $db_name = "hakoniwa";
   var $db_id = "postgres";
   var $db_pass = "hoge";
   
