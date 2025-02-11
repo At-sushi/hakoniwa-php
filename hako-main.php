@@ -390,7 +390,7 @@ class HakoIO {
       return false;
     }
 
-    $query = $this->db_handle->query("SELECT * FROM games LIMIT 1" + $post_prefix);
+    $query = $this->db_handle->query("SELECT * FROM games LIMIT 1" . $post_prefix);
     [
       $this->islandTurn,
       $this->islandLastTime,
@@ -426,7 +426,7 @@ class HakoIO {
           ."factory,"
           ."mountain,"
           ."monster"
-          ." FROM islands ORDER BY id LIMIT :num" + $post_prefix);
+          ." FROM islands ORDER BY id LIMIT :num" . $post_prefix);
     $query->bindParam(":num", $this->islandNumber);
     $query->execute();
 
@@ -446,7 +446,7 @@ class HakoIO {
     $this->idToName[$id] = $name;
 
     if(($num == -1) || ($num == $row['id'])) {
-      $query = $this->db_handle->prepare("SELECT land, landValue FROM islands WHERE id = :id + $post_prefix");
+      $query = $this->db_handle->prepare("SELECT land, landValue FROM islands WHERE id = :id" . $post_prefix);
       $query->bindParam(":id", $row['id']);
       $query->execute();
 
@@ -456,7 +456,7 @@ class HakoIO {
       $row['landValue'] = json_decode($landData['landvalue'], true);
 
       // コマンド
-      $query = $this->db_handle->prepare("SELECT kind, target, x, y, arg FROM commands WHERE islandID = :id ORDER BY line LIMIT :num" + $post_prefix);
+      $query = $this->db_handle->prepare("SELECT kind, target, x, y, arg FROM commands WHERE islandID = :id ORDER BY line LIMIT :num" . $post_prefix);
       $query->bindParam(":id", $row['id']);
       $query->bindParam(":num", $init->commandMax);
       $query->execute();
