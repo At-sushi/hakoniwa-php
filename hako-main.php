@@ -469,8 +469,6 @@ class HakoIO {
   // 全島データを書き込む
   //---------------------------------------------------
   function writeIslandsFile($num = 0, bool $create = false) {
-    $this->db_handle->beginTransaction();
-
     $query = $this->db_handle->prepare("UPDATE games SET "
     ."islandTurn = :turn, islandLastTime = :lasttime, islandNumber = :number, islandNextID = :nextid");
     $query->bindParam(":turn", $this->islandTurn);
@@ -488,8 +486,6 @@ class HakoIO {
     else {
       $this->writeIsland($fp, $num, $this->islands[$this->idToNumber[$num]], $create);
     }
-
-    $this->db_handle->commit();
   }
   //---------------------------------------------------
   // 島ひとつ書き込む
