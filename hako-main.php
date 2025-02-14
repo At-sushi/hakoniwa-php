@@ -554,8 +554,6 @@ class HakoIO {
   // 島データ削除処理
   //---------------------------------------------------
   public function deleteIsland(int $id) {
-    $this->db_handle->beginTransaction();
-
     $query = $this->db_handle->prepare("DELETE FROM islands WHERE id = :id");
     $query->bindParam(":id", $id);
     $query->execute();
@@ -563,8 +561,6 @@ class HakoIO {
     $query = $this->db_handle->prepare("DELETE FROM commands WHERE islandID = :id");
     $query->bindParam(":id", $id);
     $query->execute();
-
-    $this->db_handle->commit();
   }
   //---------------------------------------------------
   // データのバックアップ
