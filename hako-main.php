@@ -297,7 +297,7 @@ class HakoIO {
       global $init;
 
       $this->db_handle = new PDO(
-          "pgsql:host=$init->db_hostname;dbname=$init->db_name",
+          "pgsql:host={$init->db_hostname};dbname={$init->db_name}",
           $init->db_id,
           $init->db_pass,
           [
@@ -309,11 +309,15 @@ class HakoIO {
   }
 
   public function beginTransaction() {
-    $this->db_handle->beginTransaction();
+    return $this->db_handle->beginTransaction();
   }
 
   public function endTransaction() {
-    $this->db_handle->commit();
+    return $this->db_handle->commit();
+  }
+
+  public function prepareQuery($sql) {
+    return $this->db_handle->prepare($sql);
   }
 
   // テーブル初期化・作成
@@ -337,7 +341,7 @@ class HakoIO {
 
     // 島データ
     $this->db_handle->exec("CREATE TABLE islands ("
-      ."id            INT,"
+      ."id            INT NOT NULL,"
       ."name          VARCHAR(128),"
       ."owner         VARCHAR(128),"
       ."prize         VARCHAR(32),"
@@ -359,14 +363,25 @@ class HakoIO {
 
     // コマンド
     $this->db_handle->exec("CREATE TABLE commands (
-      islandID  INT,
-      line      INT,
+      islandID  INT NOT NULL,
+      line      INT NOT NULL,
       kind      INT,
-      target	INT,
+      target	  INT,
       x         INT,
       y         INT,
       arg       INT,
       CONSTRAINT command_id_key PRIMARY KEY(islandID, line)
+      )");
+
+    // ログ
+    $this->db_handle->exec("CREATE TABLE logs (
+      id_log    INT GENERATED ALWAYS AS IDENTITY,
+      m         SMALLINT,
+      turn      INT,
+      id1       INT,
+      id2       INT,
+      message   VARCHAR(512),
+      PRIMARY KEY (id_log)
       )");
 
     $this->db_handle->commit();
@@ -535,17 +550,17 @@ class HakoIO {
 
 
       // コマンド
-        // 暫定措置
-        if ($create == true) {
-          $query = $this->db_handle->prepare("INSERT INTO commands (islandID, line, kind, target, x, y, arg) VALUES (:id, :line, :kind, :target, :x, :y, :arg)");
-        }
- 	else { 
-          $query = $this->db_handle->prepare("UPDATE commands SET kind = :kind, target = :target, x = :x, y = :y, arg = :arg WHERE islandID = :id AND line = :line");
-	} 
+      // 暫定措置
+      if ($create == true) {
+        $query = $this->db_handle->prepare("INSERT INTO commands (islandID, line, kind, target, x, y, arg) VALUES (:id, :line, :kind, :target, :x, :y, :arg)");
+      }
+      else { 
+        $query = $this->db_handle->prepare("UPDATE commands SET kind = :kind, target = :target, x = :x, y = :y, arg = :arg WHERE islandID = :id AND line = :line");
+      } 
       $command = $island['command'];
       for($i = 0; $i < $init->commandMax; $i++) {
-	$command[$i]["id"] = $island['id'];
-	$command[$i]["line"] = $i;
+        $command[$i]["id"] = $island['id'];
+        $command[$i]["line"] = $i;
         $query->execute($command[$i]);
       }
     }
@@ -603,13 +618,13 @@ class LogIO {
   function logFilePrint($num = 0, $id = 0, $mode = 0) {
     global $init;
     $fileName = $init->dirName . "/hakojima.log" . $num;
-    if(!is_file($fileName)) {
-      return;
-    }
-    $fp = fopen($fileName, "r");
 
-    while($line = chop(fgets($fp, READ_LINE))) {
-      list($m, $turn, $id1, $id2, $message) = explode(",", $line, 5);
+    $query = $hako->prepareQuery("SELECT m, turn, id1, id2, message FROM logs ORDER BY id_log LIMIT :num");
+    $query->bindParam(":num", $init->logMax, PDO::PARAM_INT);
+    $query->execute();
+
+    while($line = $query->fetch(PDO::FETCH_NUM)) {
+      [$m, $turn, $id1, $id2, $message] = $line;
       if($m == 1) {
         if(($mode == 0) || ($id1 != $id)) {
           continue;
@@ -625,7 +640,6 @@ class LogIO {
       }
       print "{$init->tagNumber_}ターン{$turn}{$m}{$init->_tagNumber}：{$message}<br>\n";
     }
-    fclose($fp);
   }
   //---------------------------------------------------
   // 発見の記録を出力
@@ -700,19 +714,34 @@ class LogIO {
   // ログ
   //---------------------------------------------------
   function out($str, $id = "", $tid = "") {
-    array_push($this->logPool, "0,{$GLOBALS['ISLAND_TURN']},{$id},{$tid},{$str}");
+    $query = $hako->prepareQuery('INSERT INTO logs (m, turn, id1, id2, message) VALUES (0, :turn, :id1, :id2, :msg)');
+    $query->bindValue(':turn', $GLOBALS['ISLAND_TURN']);
+    $query->bindValue(':id1', $id);
+    $query->bindValue(':id2', $tid);
+    $query->bindValue(':msg', $str);
+    $query->execute();
   }
   //---------------------------------------------------
   // 機密ログ
   //---------------------------------------------------
   function secret($str, $id = "", $tid = "") {
-    array_push($this->secretLogPool,"1,{$GLOBALS['ISLAND_TURN']},{$id},{$tid},{$str}");
+    $query = $hako->prepareQuery('INSERT INTO logs (m, turn, id1, id2, message) VALUES (1, :turn, :id1, :id2, :msg)');
+    $query->bindValue(':turn', $GLOBALS['ISLAND_TURN']);
+    $query->bindValue(':id1', $id);
+    $query->bindValue(':id2', $tid);
+    $query->bindValue(':msg', $str);
+    $query->execute();
   }
   //---------------------------------------------------
   // 遅延ログ
   //---------------------------------------------------
   function late($str, $id = "", $tid = "") {
-    array_push($this->lateLogPool,"0,{$GLOBALS['ISLAND_TURN']},{$id},{$tid},{$str}");
+    $query = $hako->prepareQuery('INSERT INTO logs (m, turn, id1, id2, message) VALUES (0, :turn, :id1, :id2, :msg)');
+    $query->bindValue(':turn', $GLOBALS['ISLAND_TURN']);
+    $query->bindValue(':id1', $id);
+    $query->bindValue(':id2', $tid);
+    $query->bindValue(':msg', $str);
+    $query->execute();
   }
   //---------------------------------------------------
   // ログ書き出し
